@@ -1,4 +1,5 @@
-﻿using Yukarinette;
+﻿using System.Threading.Tasks;
+using Yukarinette;
 
 namespace YukarinetteYoutubeLivePlugin
 {
@@ -35,7 +36,7 @@ namespace YukarinetteYoutubeLivePlugin
 
 		public override void SpeechRecognitionStart()
 		{
-			mYoutubeLiveManager.Create(mConfigManager.Data.YoutubeChannelId, mConfigManager.Data.YoutubeApiKey);
+			mYoutubeLiveManager.Create(mConfigManager.Data.YoutubeChannelId);
 		}
 
 		public override void SpeechRecognitionStop()
@@ -43,9 +44,9 @@ namespace YukarinetteYoutubeLivePlugin
 			mYoutubeLiveManager.Dispose();
 		}
 
-		public override void Speech(string text)
+		public override async void Speech(string text)
 		{
-			mYoutubeLiveManager.Speech(text, mConfigManager.Data.YoutubeTxDelay);
+			await Task.Run(() => mYoutubeLiveManager.Speech(text, mConfigManager.Data.YoutubeTxDelay));
 		}
 	}
 }

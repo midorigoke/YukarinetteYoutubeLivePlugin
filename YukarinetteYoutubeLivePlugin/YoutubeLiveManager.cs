@@ -1,39 +1,84 @@
-﻿using Codeplex.Data;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.YouTube.v3;
+using Google.Apis.YouTube.v3.Data;
 using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using Yukarinette;
 
 namespace YukarinetteYoutubeLivePlugin
 {
 	public class YoutubeLiveManager
 	{
+		private UserCredential Credential;
+
+		private YouTubeService Service;
+
 		private string YoutubeVideoId;
 
 		private string YoutubeLiveChatId;
 
-		internal void Create(string youtubeChannelId, string youtubeApiKey)
+		internal void Create(string youtubeChannelId)
 		{
-			if(string.IsNullOrEmpty(youtubeChannelId) || string.IsNullOrEmpty(youtubeApiKey))
+			if(string.IsNullOrEmpty(youtubeChannelId))
 			{
 				throw new YukarinetteException("YoutubeLive コメント投稿 の設定が行われていません。プラグイン設定を確認してください。", new object[0]);
 			}
 
+			var CredentialTask = GetCredentialAsync();
+
 			YoutubeVideoId = GetYoutubeVideoId(youtubeChannelId);
 
-			YoutubeLiveChatId = GetYoutubeLiveChatId(YoutubeVideoId, youtubeApiKey);
+			CredentialTask.Wait();
+
+			Credential = CredentialTask.Result;
+
+			Service = new YouTubeService(new BaseClientService.Initializer()
+			{
+				HttpClientInitializer = Credential,
+				ApplicationName = "Yukarinette YoutubeLive Plugin"
+			});
+
+			YoutubeLiveChatId = GetYoutubeLiveChatId();
+
+			if (string.IsNullOrEmpty(YoutubeLiveChatId))
+			{
+				throw new YukarinetteException("LiveChatIdが取得できませんでした。");
+			}
 		}
 
 		internal void Dispose()
 		{
-			throw new NotImplementedException();
+			Credential = null;
+			YoutubeVideoId = "";
+			YoutubeLiveChatId = "";
 		}
 
 		internal void Speech(string text, int youtubeTxDelay)
 		{
-			throw new NotImplementedException();
+			Thread.Sleep(youtubeTxDelay * 1000);
+
+			SendYoutubeLiveMessage(text);
+
+		}
+
+		private async Task<UserCredential> GetCredentialAsync()
+		{
+			return await GoogleWebAuthorizationBroker.AuthorizeAsync(
+				new ClientSecrets
+				{
+					ClientId = "630708463403-86in21eag6felde98uf1m045gaabmjgk.apps.googleusercontent.com",
+					ClientSecret = "j0Wqw0brW2BMcGP3-d0lNM42"
+				},
+				new[] { YouTubeService.Scope.Youtube },
+				"user",
+				CancellationToken.None
+			);
 		}
 
 		private string GetYoutubeVideoId(string youtubeChannelId)
@@ -69,35 +114,36 @@ namespace YukarinetteYoutubeLivePlugin
 			}
 		}
 
-		private string GetYoutubeLiveChatId(string youtubeVideoId, string youtubeApiKey)
+		private string GetYoutubeLiveChatId()
 		{
-			string liveChatId = "";
+			var videoListRequest = Service.Videos.List("liveStreamingDetails");
 
-			var liveChatIdRequest = WebRequest.Create("https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id=" + youtubeVideoId + "&key=" + youtubeApiKey);
+			videoListRequest.Id = YoutubeVideoId;
 
-			try
-			{
-				using (var liveChatIdResponse = liveChatIdRequest.GetResponse())
+			var videoListResponse = videoListRequest.Execute();
+
+			return videoListResponse.Items[0].LiveStreamingDetails.ActiveLiveChatId;
+		}
+
+		private void SendYoutubeLiveMessage(string messageText)
+		{
+			var liveChatMessagesRequest = Service.LiveChatMessages.Insert(
+				new LiveChatMessage()
 				{
-					using (var liveChatIdStream = new StreamReader(liveChatIdResponse.GetResponseStream(), Encoding.UTF8))
+					Snippet = new LiveChatMessageSnippet()
 					{
-						var liveChatIdObject = DynamicJson.Parse(liveChatIdStream.ReadToEnd());
-
-						liveChatId = liveChatIdObject.items[0].liveStreamingDetails.activeLiveChatId;
-
-						if (string.IsNullOrEmpty(liveChatId))
+						LiveChatId = YoutubeLiveChatId,
+						Type = "textMessageEvent",
+						TextMessageDetails = new LiveChatTextMessageDetails()
 						{
-							throw new YukarinetteException("LiveChatが見つかりませんでした。");
+							MessageText = messageText
 						}
 					}
-				}
-			}
-			catch
-			{
-				throw new YukarinetteException("LiveChatIDの取得に失敗しました。");
-			}
+				},
+				"snippet"
+			);
 
-			return liveChatId;
+			liveChatMessagesRequest.Execute();
 		}
 	}
 }

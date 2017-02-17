@@ -8,12 +8,6 @@
 			set;
 		}
 
-		public string YoutubeApiKey
-		{
-			get;
-			set;
-		}
-
 		public int YoutubeTxDelay
 		{
 			get;
@@ -23,7 +17,6 @@
 		public ConfigData()
 		{
 			YoutubeChannelId = "";
-			YoutubeApiKey = "";
 			YoutubeTxDelay = 0;
 		}
 	}

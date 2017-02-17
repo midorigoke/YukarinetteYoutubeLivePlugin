@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,14 +33,12 @@ namespace YukarinetteYoutubeLivePlugin
 			Owner = Application.Current.MainWindow;
 
 			YoutubeChannelIdTextBox.Text = manager.Data.YoutubeChannelId;
-			YoutubeApiKeyTextBox.Text = manager.Data.YoutubeApiKey;
 			YoutubeTxDelayTextBox.Text = manager.Data.YoutubeTxDelay.ToString();
 		}
 
 		private void Save(ConfigManager manager, string pluginName)
 		{
 			manager.Data.YoutubeChannelId = YoutubeChannelIdTextBox.Text;
-			manager.Data.YoutubeApiKey = YoutubeApiKeyTextBox.Text;
 
 			try
 			{
@@ -52,6 +51,14 @@ namespace YukarinetteYoutubeLivePlugin
 
 			manager.Save(pluginName);
 		}
+
+		private void DeleteTokenCacheButton_Click(object sender, RoutedEventArgs e)
+		{
+			File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Google.Apis.Auth\Google.Apis.Auth.OAuth2.Responses.TokenResponse-user");
+
+			MessageBox.Show("トークンキャッシュを消去しました。");
+		}
+
 
 		private void OkButton_Click(object sender, RoutedEventArgs e)
 		{
