@@ -59,11 +59,11 @@ namespace YukarinetteYoutubeLivePlugin
 			YoutubeLiveChatId = "";
 		}
 
-		internal void Speech(string text, int youtubeTxDelay)
+		internal void Speech(string text, string prefix, string suffix, int txDelay)
 		{
-			Thread.Sleep(youtubeTxDelay * 1000);
+			Thread.Sleep(txDelay * 1000);
 
-			SendYoutubeLiveMessage(text);
+			SendYoutubeLiveMessage(prefix + text + suffix);
 
 		}
 

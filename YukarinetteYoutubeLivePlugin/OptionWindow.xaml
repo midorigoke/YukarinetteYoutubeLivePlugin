@@ -5,19 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YukarinetteYoutubeLivePlugin"
         mc:Ignorable="d"
-        Title="YoutubeLive コメント投稿" Height="200" Width="480">
+        Title="YoutubeLive コメント投稿" Height="360" Width="480">
 	<Grid>
-		<Grid Margin="0,0,0,70">
-			<Grid Margin="5,5,5,55">
-				<TextBlock Text="チャンネルID" Margin="5,5,360,5"/>
-				<TextBox Name="YoutubeChannelIdTextBox" Text="" Margin="110,5,5,5"/>
+		<Grid Height="200" Margin="10,10,10,100">
+			<Grid Height="40" Margin="5,5,5,155">
+				<TextBlock Text="チャンネルID" Margin="5,5,340,5"/>
+				<TextBox Name="YoutubeChannelIdTextBox" Text="" Margin="120,5,5,5"/>
 			</Grid>
-			<Grid Margin="5,55,5,5">
-				<TextBlock Text="送信遅延 (秒)" Margin="5,5,360,5"/>
-				<TextBox Name="YoutubeTxDelayTextBox" Text="" Margin="110,5,305,5"/>
+			<Grid Height="40" Margin="5,55,5,105">
+				<TextBlock Text="コメントプレフィックス" Margin="5,5,340,5"/>
+				<TextBox Name="MessagePrefixTextBox" Text="" Margin="120,5,5,5"/>
+			</Grid>
+			<Grid Height="40" Margin="5,105,5,55">
+				<TextBlock Text="コメントサフィックス" Margin="5,5,340,5"/>
+				<TextBox Name="MessageSuffixTextBox" Text="" Margin="120,5,5,5"/>
+			</Grid>
+			<Grid Height="40" Margin="5,155,5,5">
+				<TextBlock Text="送信遅延 (秒)" Margin="5,5,340,5"/>
+				<TextBox Name="TxDelayTextBox" Text="" Margin="120,5,280,5"/>
 			</Grid>
 		</Grid>
-		<Grid Margin="0,100,0,0">
+		<Grid Margin="0,240,0,0">
 			<Grid Margin="10,10,240,10">
 				<Button Name="DeleteTokenCacheButton" Click="DeleteTokenCacheButton_Click" Content="トークンキャッシュ消去" Margin="5,5,60,5"/>
 			</Grid>

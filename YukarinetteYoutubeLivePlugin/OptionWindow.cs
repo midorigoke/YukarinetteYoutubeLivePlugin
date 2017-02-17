@@ -33,20 +33,24 @@ namespace YukarinetteYoutubeLivePlugin
 			Owner = Application.Current.MainWindow;
 
 			YoutubeChannelIdTextBox.Text = manager.Data.YoutubeChannelId;
-			YoutubeTxDelayTextBox.Text = manager.Data.YoutubeTxDelay.ToString();
+			MessagePrefixTextBox.Text = manager.Data.MessagePrefix;
+			MessageSuffixTextBox.Text = manager.Data.MessageSuffix;
+			TxDelayTextBox.Text = manager.Data.TxDelay.ToString();
 		}
 
 		private void Save(ConfigManager manager, string pluginName)
 		{
 			manager.Data.YoutubeChannelId = YoutubeChannelIdTextBox.Text;
+			manager.Data.MessagePrefix = MessagePrefixTextBox.Text;
+			manager.Data.MessageSuffix = MessageSuffixTextBox.Text;
 
 			try
 			{
-				manager.Data.YoutubeTxDelay = int.Parse(YoutubeTxDelayTextBox.Text);
+				manager.Data.TxDelay = int.Parse(TxDelayTextBox.Text);
 			}
 			catch
 			{
-				manager.Data.YoutubeTxDelay = 0;
+				manager.Data.TxDelay = 7;
 			}
 
 			manager.Save(pluginName);

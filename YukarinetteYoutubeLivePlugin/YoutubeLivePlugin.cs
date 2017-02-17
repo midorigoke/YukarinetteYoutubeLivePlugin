@@ -46,7 +46,7 @@ namespace YukarinetteYoutubeLivePlugin
 
 		public override async void Speech(string text)
 		{
-			await Task.Run(() => mYoutubeLiveManager.Speech(text, mConfigManager.Data.YoutubeTxDelay));
+			await Task.Run(() => mYoutubeLiveManager.Speech(text, mConfigManager.Data.MessagePrefix, mConfigManager.Data.MessageSuffix, mConfigManager.Data.TxDelay));
 		}
 	}
 }

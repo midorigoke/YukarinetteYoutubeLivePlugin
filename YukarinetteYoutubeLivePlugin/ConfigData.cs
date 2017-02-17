@@ -8,7 +8,19 @@
 			set;
 		}
 
-		public int YoutubeTxDelay
+		public string MessagePrefix
+		{
+			get;
+			set;
+		}
+
+		public string MessageSuffix
+		{
+			get;
+			set;
+		}
+
+		public int TxDelay
 		{
 			get;
 			set;
@@ -17,7 +29,9 @@
 		public ConfigData()
 		{
 			YoutubeChannelId = "";
-			YoutubeTxDelay = 0;
+			MessagePrefix = "(音声認識) ";
+			MessageSuffix = "";
+			TxDelay = 7;
 		}
 	}
 }
