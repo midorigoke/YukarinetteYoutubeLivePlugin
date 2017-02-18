@@ -73,5 +73,5 @@ IssueかPull Requestお待ちしています。
 
 ## License
 
-このソフトウェアは[MIT License](https://github.com/midorigoke/get_youtubelive_comments/blob/master/LICENSE)のもとで公開されています。
+このソフトウェアは[MIT License](https://github.com/midorigoke/YukarinetteYoutubeLivePlugin/blob/master/LICENSE)のもとで公開されています。
 
