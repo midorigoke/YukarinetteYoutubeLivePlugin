@@ -44,14 +44,18 @@ namespace YukarinetteYoutubeLivePlugin
 			manager.Data.MessagePrefix = MessagePrefixTextBox.Text;
 			manager.Data.MessageSuffix = MessageSuffixTextBox.Text;
 
+			var txDelay = 0;
+
 			try
 			{
-				manager.Data.TxDelay = int.Parse(TxDelayTextBox.Text);
+				txDelay = int.Parse(TxDelayTextBox.Text);
 			}
 			catch
 			{
-				manager.Data.TxDelay = 7;
+				txDelay = 7;
 			}
+
+			manager.Data.TxDelay = txDelay > 0 ? txDelay : 0;
 
 			manager.Save(pluginName);
 		}
